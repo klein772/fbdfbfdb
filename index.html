@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overtime Calculator (24-hour format)</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 400px; margin: auto; padding: 20px; }
+    input, button { width: 100%; padding: 8px; margin: 10px 0; }
+    button { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Overtime Calculator (24-hour format)</h2>
+
+  <label for="morningStart">Morning Shift Start:</label>
+  <input type="time" id="morningStart" required>
+
+  <label for="morningEnd">Morning Shift End:</label>
+  <input type="time" id="morningEnd" required>
+
+  <label for="eveningStart">Evening Shift Start:</label>
+  <input type="time" id="eveningStart" required>
+
+  <label for="eveningEnd">Evening Shift End:</label>
+  <input type="time" id="eveningEnd" required>
+
+  <button onclick="calculateOvertime()">Calculate Overtime</button>
+
+  <h3 id="result"></h3>
+</div>
+
+<script>
+function timeToMinutes(time) {
+    const [hours, minutes] = time.split(":").map(Number);
+    return hours * 60 + minutes;
+}
+
+function calculateOvertime() {
+    const morningStart = document.getElementById("morningStart").value;
+    const morningEnd = document.getElementById("morningEnd").value;
+    const eveningStart = document.getElementById("eveningStart").value;
+    const eveningEnd = document.getElementById("eveningEnd").value;
+
+    if (!morningStart || !morningEnd || !eveningStart || !eveningEnd) {
+        document.getElementById("result").innerText = "Please enter all shift times.";
+        return;
+    }
+
+    const requiredMinutes = 540; // 2 hours = 120 minutes
+
+    const morningMinutes = timeToMinutes(morningEnd) - timeToMinutes(morningStart);
+    const eveningMinutes = timeToMinutes(eveningEnd) - timeToMinutes(eveningStart);
+
+    const totalMinutes = morningMinutes + eveningMinutes;
+    const difference = totalMinutes - requiredMinutes;
+
+    let resultText;
+    if (difference > 0) {
+        resultText = `+${difference} min (Overtime)`;
+    } else if (difference < 0) {
+        resultText = `${difference} min (Under time)`;
+    } else {
+        resultText = "Exactly 9 hours worked (No overtime or under time)";
+    }
+
+    document.getElementById("result").innerText = resultText;
+}
+</script>
+
+</body>
+</html>
+
+
